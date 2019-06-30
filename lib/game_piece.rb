@@ -58,4 +58,21 @@ class Rook > GamePiece
 end
 class Pawn > GamePiece
   @symbol = 'P'
+  def initialize(position, color)
+    @color = color
+    if @color == 'W'
+      @moves = [[0,1]]
+    else
+      @moves = [[0,-1]]
+    end
+    @position = position
+  end
+  def first_move
+  end
+
+  def promote
+  end
+
+  def en_passant
+  end
 end
