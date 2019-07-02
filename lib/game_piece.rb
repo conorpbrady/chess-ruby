@@ -8,11 +8,11 @@ class GamePiece
 end
 
 
-class King > GamePiece
+class King < GamePiece
   @symbol = 'K'
   @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
 end
-class Queen > GamePiece
+class Queen < GamePiece
   @symbol = 'Q'
   @moves = [
     [0,'x'],
@@ -25,7 +25,7 @@ class Queen > GamePiece
     ['-x','-x']
     ]
 end
-class Bishop > GamePiece
+class Bishop < GamePiece
   @symbol = 'B'
   @moves =  [
     ['x','x'],
@@ -34,7 +34,7 @@ class Bishop > GamePiece
     ['-x','-x']
   ]
 end
-class Knight > GamePiece
+class Knight < GamePiece
   @symbol = 'N'
   @moves = [
     [1,2],
@@ -47,7 +47,7 @@ class Knight > GamePiece
     [-2,-1]
   ]
 end
-class Rook > GamePiece
+class Rook < GamePiece
   @symbol = 'R'
   @moves = [
     [0,'x'],
@@ -56,7 +56,7 @@ class Rook > GamePiece
     ['-x',0]
   ]
 end
-class Pawn > GamePiece
+class Pawn < GamePiece
   @symbol = 'P'
   def initialize(position, color)
     @color = color
