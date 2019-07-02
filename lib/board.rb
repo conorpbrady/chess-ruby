@@ -9,6 +9,17 @@ class Board
 
   end
 
+  def is_open_space?(position)
+    white_pieces.each { |piece| return false if piece.position.occupies?(position) }
+    black_pieces.each { |piece| return false if piece.position.occupies?(position) }
+
+  end
+
+  def in_bounds?(position)
+    return (position.x > 8 || position.x < 0 || position.y > 8 || position.y < 0)
+
+  end
+
   def init_pieces
     colors = ['W','B']
       white_pieces.add(Rook.new('A1'))
