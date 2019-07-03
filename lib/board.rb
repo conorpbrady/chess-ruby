@@ -1,5 +1,8 @@
-class Board
+require './lib/position.rb'
+require './lib/game_piece.rb'
 
+class Board
+  attr_accessor :board
   def initialize
     @white_pieces = []
     @black_pieces = []
@@ -12,9 +15,9 @@ class Board
   end
 
   def is_open_space?(position)
-    @white_pieces.each { |piece| return false if piece.position.occupies?(position) }
-    @black_pieces.each { |piece| return false if piece.position.occupies?(position) }
-
+    @white_pieces.each { |piece| return false if piece.position.occupies?(pos(position)) }
+    @black_pieces.each { |piece| return false if piece.position.occupies?(pos(position)) }
+    return true
   end
 
   def in_bounds?(position)
@@ -37,14 +40,14 @@ class Board
 
   def init_pieces
     colors = ['W','B']
-      @white_pieces << Rook.new(self.pos('A1'))
-      @white_pieces << Knight.new(self.pos('B1'))
-      @white_pieces << Bishop.new(self.pos('C1'))
-      @white_pieces << Queen.new(self.pos('D1'))
-      @white_pieces << King.new(self.pos('E1'))
-      @white_pieces << Bishop.new(self.pos('F1'))
-      @white_pieces << Knight.new(self.pos('G1'))
-      @white_pieces << Rook.new(self.pos('H1'))
+      @white_pieces << Rook.new(pos('A1'))
+      @white_pieces << Knight.new(pos('B1'))
+      @white_pieces << Bishop.new(pos('C1'))
+      @white_pieces << Queen.new(pos('D1'))
+      @white_pieces << King.new(pos('E1'))
+      @white_pieces << Bishop.new(pos('F1'))
+      @white_pieces << Knight.new(pos('G1'))
+      @white_pieces << Rook.new(pos('H1'))
 
     end
 
