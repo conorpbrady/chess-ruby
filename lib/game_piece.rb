@@ -15,16 +15,17 @@ end
 
 
 class King < GamePiece
-  def initialize(position)
-    @symbol = 'K'
+  def initialize(position, color)
+    @symbol = color == :white ? "\u265A" : "\u2654"
     @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
     super(position)
   end
 end
 
 class Queen < GamePiece
-  def initialize(position)
-    @symbol = 'Q'
+  def initialize(position, color)
+
+    @symbol = color == :white ? "\u265B" : "\u2655"
     @moves = [
       [0,'x'],
       ['x','-x'],
@@ -39,8 +40,9 @@ class Queen < GamePiece
   end
 end
 class Bishop < GamePiece
-  def initialize(position)
-    @symbol = 'B'
+  def initialize(position, color)
+    @symbol = color == :white ? "\u265C" : "\u2656"
+
     @moves =  [
       ['x','x'],
       ['-x','x'],
@@ -51,8 +53,9 @@ class Bishop < GamePiece
   end
 end
 class Knight < GamePiece
-  def initialize(position)
-    @symbol = 'N'
+  def initialize(position, color)
+    @symbol = color == :white ? "\u265D" : "\u2657"
+
     @moves = [
       [1,2],
       [2,1],
@@ -68,8 +71,9 @@ class Knight < GamePiece
 end
 class Rook < GamePiece
 
-  def initialize(position)
-    @symbol = 'R'
+  def initialize(position, color)
+    @symbol = color == :white ? "\u265E" : "\u2658"
+
     @moves = [
       [0,'x'],
       [0,'-x'],
@@ -82,6 +86,8 @@ end
 class Pawn < GamePiece
 
   def initialize(position, color)
+    @symbol = color == :white ? "\u265F" : "\u2659"
+
     @color = color
     if @color == 'W'
       @moves = [[0,1]]
@@ -89,7 +95,6 @@ class Pawn < GamePiece
       @moves = [[0,-1]]
     end
 
-    @symbol = 'P'
     super(position)
   end
   def first_move

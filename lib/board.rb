@@ -57,14 +57,31 @@ class Board
 
   def init_pieces
     colors = ['W','B']
-      @white_pieces << Rook.new(pos('A1'))
-      @white_pieces << Knight.new(pos('B1'))
-      @white_pieces << Bishop.new(pos('C1'))
-      @white_pieces << Queen.new(pos('D1'))
-      @white_pieces << King.new(pos('E1'))
-      @white_pieces << Bishop.new(pos('F1'))
-      @white_pieces << Knight.new(pos('G1'))
-      @white_pieces << Rook.new(pos('H1'))
+      @white_pieces << Rook.new(pos('A8'), :white)
+      @white_pieces << Knight.new(pos('B8'), :white)
+      @white_pieces << Bishop.new(pos('C8'), :white)
+      @white_pieces << Queen.new(pos('D8'), :white)
+      @white_pieces << King.new(pos('E8'), :white)
+      @white_pieces << Bishop.new(pos('F8'), :white)
+      @white_pieces << Knight.new(pos('G8'), :white)
+      @white_pieces << Rook.new(pos('H8'), :white)
+
+      (1..8).each do |n|
+        @white_pieces << Pawn.new(pos((64+n).chr + '7'), :white)
+      end
+
+      @black_pieces << Rook.new(pos('A1'),:black)
+      @black_pieces << Knight.new(pos('B1'),:black)
+      @black_pieces << Bishop.new(pos('C1'),:black)
+      @black_pieces << Queen.new(pos('D1'),:black)
+      @black_pieces << King.new(pos('E1'),:black)
+      @black_pieces << Bishop.new(pos('F1'),:black)
+      @black_pieces << Knight.new(pos('G1'),:black)
+      @black_pieces << Rook.new(pos('H1'),:black)
+
+      (1..8).each do |n|
+        @black_pieces << Pawn.new(pos((64+n).chr + '2'), :black)
+      end
 
     end
 
