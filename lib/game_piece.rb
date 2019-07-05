@@ -15,55 +15,72 @@ end
 
 
 class King < GamePiece
-  @symbol = 'K'
-  @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
+  def initialize(position)
+    @symbol = 'K'
+    @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
+    super(position)
+  end
 end
+
 class Queen < GamePiece
-  @symbol = 'Q'
-  @moves = [
-    [0,'x'],
-    ['x','-x'],
-    ['x',0],
-    ['x','x'],
-    [0,'x'],
-    ['-x','x'],
-    ['-x',0],
-    ['-x','-x']
-    ]
+  def initialize(position)
+    @symbol = 'Q'
+    @moves = [
+      [0,'x'],
+      ['x','-x'],
+      ['x',0],
+      ['x','x'],
+      [0,'x'],
+      ['-x','x'],
+      ['-x',0],
+      ['-x','-x']
+      ]
+      super(position)
+  end
 end
 class Bishop < GamePiece
-  @symbol = 'B'
-  @moves =  [
-    ['x','x'],
-    ['-x','x'],
-    ['x','-x'],
-    ['-x','-x']
-  ]
+  def initialize(position)
+    @symbol = 'B'
+    @moves =  [
+      ['x','x'],
+      ['-x','x'],
+      ['x','-x'],
+      ['-x','-x']
+    ]
+    super(position)
+  end
 end
 class Knight < GamePiece
-  @symbol = 'N'
-  @moves = [
-    [1,2],
-    [2,1],
-    [-1,2],
-    [-2,1],
-    [1,-2],
-    [2,-1],
-    [-1,-2],
-    [-2,-1]
-  ]
+  def initialize(position)
+    @symbol = 'N'
+    @moves = [
+      [1,2],
+      [2,1],
+      [-1,2],
+      [-2,1],
+      [1,-2],
+      [2,-1],
+      [-1,-2],
+      [-2,-1]
+    ]
+    super(position)
+  end
 end
 class Rook < GamePiece
-  @symbol = 'R'
-  @moves = [
-    [0,'x'],
-    [0,'-x'],
-    ['x',0],
-    ['-x',0]
-  ]
+
+  def initialize(position)
+    @symbol = 'R'
+    @moves = [
+      [0,'x'],
+      [0,'-x'],
+      ['x',0],
+      ['-x',0]
+    ]
+    super(position)
+  end
 end
 class Pawn < GamePiece
-  @symbol = 'P'
+
   def initialize(position, color)
     @color = color
     if @color == 'W'
@@ -71,7 +88,9 @@ class Pawn < GamePiece
     else
       @moves = [[0,-1]]
     end
-    @position = position
+
+    @symbol = 'P'
+    super(position)
   end
   def first_move
   end

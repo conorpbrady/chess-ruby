@@ -11,13 +11,30 @@ class Board
   end
 
   def draw
-
+    puts "    A   B   C   D   E   F   G   H  "
+    puts "  ---------------------------------"
+    (1..8).each do |n|
+      print "#{n} |"
+      (1..8).each do |m|
+        token = get_piece_on_space((m+64).chr + n.to_s)
+        token_symbol = token.nil? ?  " " : token.symbol
+        print " " + token_symbol + " " + "|"
+      end
+      puts ""
+      puts "  ---------------------------------"
+    end
   end
 
   def is_open_space?(p_str)
     @white_pieces.each { |piece| return false if piece.occupies?(p_str) }
     @black_pieces.each { |piece| return false if piece.occupies?(p_str) }
     return true
+  end
+
+  def get_piece_on_space(p_str)
+    @white_pieces.each { |piece| return piece if piece.occupies?(p_str) }
+    @black_pieces.each { |piece| return piece if piece.occupies?(p_str) }
+    return nil
   end
 
   def in_bounds?(position)
