@@ -14,9 +14,9 @@ class Board
 
   end
 
-  def is_open_space?(position)
-    @white_pieces.each { |piece| return false if piece.position.occupies?(pos(position)) }
-    @black_pieces.each { |piece| return false if piece.position.occupies?(pos(position)) }
+  def is_open_space?(p_str)
+    @white_pieces.each { |piece| return false if piece.occupies?(p_str) }
+    @black_pieces.each { |piece| return false if piece.occupies?(p_str) }
     return true
   end
 

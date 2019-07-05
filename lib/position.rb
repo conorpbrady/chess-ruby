@@ -7,7 +7,9 @@ class Position
     @y = y
   end
 
-  def occupies?(position)
-    return position.x = @x && position.y == @y
+  def occupies?(p_str)
+    x = p_str[0].ord - 64
+    y = p_str[1].to_i
+    return x == @x && y == @y
   end
 end
