@@ -1,8 +1,10 @@
 class GamePiece
   attr_accessor :position, :symbol, :color
 
-  def initialize(position)
-    @position = position
+  def initialize(p_str)
+    x = p_str[0].ord - 64
+    y = p_str[1].to_i
+    @position = Position.new(x, y)
   end
 
   def occupies?(p_str)
@@ -16,7 +18,7 @@ end
 
 class King < GamePiece
   def initialize(position, color)
-    @symbol = color == :white ? "\u265A" : "\u2654"
+    @symbol = color == :white ? "\u2654" : "\u265A"
     @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
     super(position)
   end
@@ -25,7 +27,7 @@ end
 class Queen < GamePiece
   def initialize(position, color)
 
-    @symbol = color == :white ? "\u265B" : "\u2655"
+    @symbol = color == :white ? "\u2655" : "\u265B"
     @moves = [
       [0,'x'],
       ['x','-x'],
@@ -41,7 +43,7 @@ class Queen < GamePiece
 end
 class Bishop < GamePiece
   def initialize(position, color)
-    @symbol = color == :white ? "\u265C" : "\u2656"
+    @symbol = color == :white ?  "\u2656" : "\u265C"
 
     @moves =  [
       ['x','x'],
@@ -54,7 +56,7 @@ class Bishop < GamePiece
 end
 class Knight < GamePiece
   def initialize(position, color)
-    @symbol = color == :white ? "\u265D" : "\u2657"
+    @symbol = color == :white ? "\u2657" : "\u265D"
 
     @moves = [
       [1,2],
@@ -72,7 +74,7 @@ end
 class Rook < GamePiece
 
   def initialize(position, color)
-    @symbol = color == :white ? "\u265E" : "\u2658"
+    @symbol = color == :white ? "\u2658" : "\u265E"
 
     @moves = [
       [0,'x'],
@@ -86,7 +88,7 @@ end
 class Pawn < GamePiece
 
   def initialize(position, color)
-    @symbol = color == :white ? "\u265F" : "\u2659"
+    @symbol = color == :white ? "\u2659" : "\u265F"
 
     @color = color
     if @color == 'W'

@@ -7,5 +7,7 @@ class Position
     @y = y
   end
 
-
+  def to_s
+    return "#{(@x+64).chr}#{y}"
+  end
 end

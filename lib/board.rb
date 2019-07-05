@@ -2,12 +2,13 @@ require './lib/position.rb'
 require './lib/game_piece.rb'
 
 class Board
-  attr_accessor :board
+  attr_accessor :board, :white_pieces, :black_pieces
+
   def initialize
     @white_pieces = []
     @black_pieces = []
     @board = Hash.new
-    define_positions()
+  #  define_positions()
   end
 
   def draw
@@ -41,46 +42,46 @@ class Board
     return (position.x > 8 || position.x < 0 || position.y > 8 || position.y < 0)
   end
 
-  def define_positions()
-    (1..8).each do |n|
-      char = (64 + n).chr
-      @board[char] = []
-      (1..8).each do |m|
-        @board[char] << Position.new(n,m)
-      end
-    end
-  end
+  # def define_positions()
+  #  (1..8).each do |n|
+  #    char = (64 + n).chr
+  #    @board[char] = []
+  #    (1..8).each do |m|
+  #      @board[char] << Position.new(n,m)
+  #    end
+  #  end
+  # end
 
-  def pos(str)
-    @board[str[0]][str[1].to_i - 1]
-  end
+  #def pos(str)
+  #  @board[str[0]][str[1].to_i - 1]
+  #end
 
   def init_pieces
-    colors = ['W','B']
-      @white_pieces << Rook.new(pos('A8'), :white)
-      @white_pieces << Knight.new(pos('B8'), :white)
-      @white_pieces << Bishop.new(pos('C8'), :white)
-      @white_pieces << Queen.new(pos('D8'), :white)
-      @white_pieces << King.new(pos('E8'), :white)
-      @white_pieces << Bishop.new(pos('F8'), :white)
-      @white_pieces << Knight.new(pos('G8'), :white)
-      @white_pieces << Rook.new(pos('H8'), :white)
+
+      @white_pieces << Rook.new('A8', :white)
+      @white_pieces << Knight.new('B8', :white)
+      @white_pieces << Bishop.new('C8', :white)
+      @white_pieces << Queen.new('D8', :white)
+      @white_pieces << King.new('E8', :white)
+      @white_pieces << Bishop.new('F8', :white)
+      @white_pieces << Knight.new('G8', :white)
+      @white_pieces << Rook.new('H8', :white)
 
       (1..8).each do |n|
-        @white_pieces << Pawn.new(pos((64+n).chr + '7'), :white)
+        @white_pieces << Pawn.new((64+n).chr + '7', :white)
       end
 
-      @black_pieces << Rook.new(pos('A1'),:black)
-      @black_pieces << Knight.new(pos('B1'),:black)
-      @black_pieces << Bishop.new(pos('C1'),:black)
-      @black_pieces << Queen.new(pos('D1'),:black)
-      @black_pieces << King.new(pos('E1'),:black)
-      @black_pieces << Bishop.new(pos('F1'),:black)
-      @black_pieces << Knight.new(pos('G1'),:black)
-      @black_pieces << Rook.new(pos('H1'),:black)
+      @black_pieces << Rook.new('A1',:black)
+      @black_pieces << Knight.new('B1',:black)
+      @black_pieces << Bishop.new('C1',:black)
+      @black_pieces << Queen.new('D1',:black)
+      @black_pieces << King.new('E1',:black)
+      @black_pieces << Bishop.new('F1',:black)
+      @black_pieces << Knight.new('G1',:black)
+      @black_pieces << Rook.new('H1',:black)
 
       (1..8).each do |n|
-        @black_pieces << Pawn.new(pos((64+n).chr + '2'), :black)
+        @black_pieces << Pawn.new((64+n).chr + '2', :black)
       end
 
     end
