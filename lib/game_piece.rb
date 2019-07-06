@@ -11,6 +11,8 @@ class GamePiece
     return @position.x == x && @position.y == y
   end
 
+  
+
 end
 
 
