@@ -11,7 +11,7 @@ class GamePiece
     return @position.x == x && @position.y == y
   end
 
-  
+
 
 end
 
@@ -34,7 +34,7 @@ class Queen < GamePiece
 end
 class Bishop < GamePiece
   def initialize(position, color)
-    @symbol = color == :white ?  "\u2656" : "\u265C"
+    @symbol = color == :white ?  "\u2657" : "\u265D"
 
     @moves =  [:ne, :se, :nw, :sw]
     super(position)
@@ -42,7 +42,7 @@ class Bishop < GamePiece
 end
 class Knight < GamePiece
   def initialize(position, color)
-    @symbol = color == :white ? "\u2657" : "\u265D"
+    @symbol = color == :white ? "\u2658" : "\u265E"
 
     @moves = [
       [1,2],
@@ -60,7 +60,7 @@ end
 class Rook < GamePiece
 
   def initialize(position, color)
-    @symbol = color == :white ? "\u2658" : "\u265E"
+    @symbol = color == :white ? "\u2656" : "\u265C"
 
     @moves = [:north, :south, :east, :west]
     super(position)
