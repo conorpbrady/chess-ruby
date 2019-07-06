@@ -1,5 +1,5 @@
 class GamePiece
-  attr_accessor :position, :symbol, :color
+  attr_accessor :position, :symbol, :color, :moves
 
   def initialize(p_str)
     x = p_str[0].ord - 64
@@ -7,9 +7,7 @@ class GamePiece
     @position = Position.new(x, y)
   end
 
-  def occupies?(p_str)
-    x = p_str[0].ord - 64
-    y = p_str[1].to_i
+  def occupies?(x, y)
     return @position.x == x && @position.y == y
   end
 
@@ -28,16 +26,7 @@ class Queen < GamePiece
   def initialize(position, color)
 
     @symbol = color == :white ? "\u2655" : "\u265B"
-    @moves = [
-      [0,'x'],
-      ['x','-x'],
-      ['x',0],
-      ['x','x'],
-      [0,'x'],
-      ['-x','x'],
-      ['-x',0],
-      ['-x','-x']
-      ]
+    @moves = [:north, :south, :east, :west, :ne, :sw, :nw, :se]
       super(position)
   end
 end
@@ -45,12 +34,7 @@ class Bishop < GamePiece
   def initialize(position, color)
     @symbol = color == :white ?  "\u2656" : "\u265C"
 
-    @moves =  [
-      ['x','x'],
-      ['-x','x'],
-      ['x','-x'],
-      ['-x','-x']
-    ]
+    @moves =  [:ne, :se, :nw, :sw]
     super(position)
   end
 end
@@ -76,12 +60,7 @@ class Rook < GamePiece
   def initialize(position, color)
     @symbol = color == :white ? "\u2658" : "\u265E"
 
-    @moves = [
-      [0,'x'],
-      [0,'-x'],
-      ['x',0],
-      ['-x',0]
-    ]
+    @moves = [:north, :south, :east, :west]
     super(position)
   end
 end

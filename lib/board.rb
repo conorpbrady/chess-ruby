@@ -17,7 +17,7 @@ class Board
     (1..8).each do |n|
       print "#{n} |"
       (1..8).each do |m|
-        token = get_piece_on_space((m+64).chr + n.to_s)
+        token = get_piece_on_space(x: m, y: n)
         token_symbol = token.nil? ?  " " : token.symbol
         print " " + token_symbol + " " + "|"
       end
@@ -26,20 +26,28 @@ class Board
     end
   end
 
-  def is_open_space?(p_str)
-    @white_pieces.each { |piece| return false if piece.occupies?(p_str) }
-    @black_pieces.each { |piece| return false if piece.occupies?(p_str) }
+  def is_open_space?(p_str:  nil, x: nil, y: nil)
+    if x.nil?
+      x = p_str[0].ord - 64
+      y = p_str[1].to_i
+    end
+    @white_pieces.each { |piece| return false if piece.occupies?(x, y) }
+    @black_pieces.each { |piece| return false if piece.occupies?(x, y) }
     return true
   end
 
-  def get_piece_on_space(p_str)
-    @white_pieces.each { |piece| return piece if piece.occupies?(p_str) }
-    @black_pieces.each { |piece| return piece if piece.occupies?(p_str) }
+  def get_piece_on_space(p_str: nil, x: nil, y: nil)
+    if x.nil?
+      x = p_str[0].ord - 64
+      y = p_str[1].to_i
+    end
+    @white_pieces.each { |piece| return piece if piece.occupies?(x,y) }
+    @black_pieces.each { |piece| return piece if piece.occupies?(x,y) }
     return nil
   end
 
-  def in_bounds?(position)
-    return (position.x > 8 || position.x < 0 || position.y > 8 || position.y < 0)
+  def in_bounds?(x, y)
+    return (x < 9 && x > 0 && y < 9 && y > 0)
   end
 
   # def define_positions()
