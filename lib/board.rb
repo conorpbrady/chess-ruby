@@ -33,6 +33,77 @@ class Board
     return nil
   end
 
+  def list_pieces(color)
+    moveable_pieces = Hash.new
+    i = 1
+
+    @active_pieces.each do |piece|
+      next unless piece.color == color
+      print "#{i}. #{piece.class} @ #{piece.position}"
+      moveable_pieces[i] = piece
+      if i % 4 == 0
+        puts ""
+      else
+        print ", "
+      end
+      i = i + 1
+    end
+    puts ""
+    return moveable_pieces
+  end
+
+  def list_moves(moves)
+    moves.each do |key, move|
+      print "#{key}. #{move}"
+      print " (capture #{get_piece_at(x: move.to.x, y: move.to.y)})" if move.capture
+      puts ""
+    end
+  end
+
+  def available_moves(piece)
+    open_moves = Hash.new
+    color = piece.color
+    i = 1
+    piece.moves.each do |move|
+
+      dx, dy, can_capture = move.is_a?(Symbol) ? piece.open_path(move) : move
+
+      new_x = piece.position.x + dx
+      new_y = piece.position.y + dy
+      move_type = get_move_type(new_x, new_y, color, can_capture)
+      while move_type != :invalid
+        capture = move_type == :capture
+        open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
+        i += 1
+        break if move.is_a?(Array)
+        break if capture
+        new_x += dx
+        new_y += dy
+        move_type = get_move_type(new_x, new_y, color, can_capture)
+      end
+    end
+    return open_moves
+  end
+
+  def get_move_type(x, y, color, is_capture_only_move)
+
+    dest_piece = get_piece_at(x: x, y: y)
+
+    return :invalid unless in_bounds?(x, y)
+
+    if get_piece_at(x: x, y: y).nil?
+      return :open if is_capture_only_move.nil?
+      return :open unless is_capture_only_move
+      return :invalid if is_capture_only_move
+    end
+
+    return :invalid if dest_piece.color == color
+
+    if dest_piece.color != color
+      return is_capture_only_move ? :capture : :invalid
+    end
+  end
+
   def remove_piece_at(position)
     @active_pieces.each { |piece| active_pieces.delete(piece) if piece.occupies?(position.x, position.y) }
   end

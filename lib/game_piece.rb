@@ -16,6 +16,18 @@ class GamePiece
     return "#{self.class}"
   end
 
+  def open_path(d)
+    dx = 0
+    dy = 0
+
+    dx = 1 if(d == :east || d == :ne || d == :se)
+    dx = -1 if(d == :west || d == :nw || d == :sw)
+
+    dy = -1 if(d == :north || d == :nw || d == :ne)
+    dy = 1 if(d == :south || d == :sw || d == :se)
+    return [dx, dy]
+
+  end
 
 
 end

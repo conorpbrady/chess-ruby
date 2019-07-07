@@ -3,108 +3,24 @@ require './lib/board.rb'
 require './lib/game_piece.rb'
 require './lib/move.rb'
 
-def display_pieces(board, color)
-  moveable_pieces = Hash.new
-  i = 1
 
-  board.active_pieces.each do |piece|
-    next unless piece.color == color
-    print "#{i}. #{piece.class} @ #{piece.position}"
-    moveable_pieces[i] = piece
-    if i % 4 == 0
-      puts ""
-    else
-      print ", "
-    end
-    i = i + 1
-  end
-  puts ""
-  return moveable_pieces
-end
-
-def piece_to_move(pieces)
+def select_piece(pieces)
   puts "Select pieces to move: "
   input = gets.chomp
   pieces[input.to_i]
 end
 
-def open_path(d)
-  dx = 0
-  dy = 0
-
-  dx = 1 if(d == :east || d == :ne || d == :se)
-  dx = -1 if(d == :west || d == :nw || d == :sw)
-
-  dy = -1 if(d == :north || d == :nw || d == :ne)
-  dy = 1 if(d == :south || d == :sw || d == :se)
-  return [dx, dy]
-
-end
-def get_move_type(board, x, y, color, can_only_capture)
-
-  dest_piece = board.get_piece_at(x: x, y: y)
-
-  return :invalid unless board.in_bounds?(x, y)
-
-
-
-  if board.get_piece_at(x: x, y: y).nil?
-    return :open if can_only_capture.nil?
-    return :open unless can_only_capture
-    return :invalid if can_only_capture
-  end
-
-  return :invalid if dest_piece.color == color
-
-  if dest_piece.color != color
-    return can_only_capture ? :capture : :invalid
-  end
-
-
-end
-def available_moves(board, piece, color)
-  open_moves = Hash.new
-
-  i = 1
-  piece.moves.each do |move|
-
-    dx, dy, can_capture = move.is_a?(Symbol) ? open_path(move) : move
-
-    new_x = piece.position.x + dx
-    new_y = piece.position.y + dy
-    move_type = get_move_type(board, new_x, new_y, color, can_capture)
-    while move_type != :invalid
-      capture = move_type == :capture
-      open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
-      i += 1
-      break if move.is_a?(Array)
-      break if capture
-      new_x += dx
-      new_y += dy
-      move_type = get_move_type(board, new_x, new_y, color)
-    end
-  end
-  return open_moves
-end
-
-def display_and_get_move(board, moves)
-  moves.each do |key, move|
-    print "#{key}. #{move}"
-    print " (capture #{board.get_piece_at(x: move.to.x, y: move.to.y)})" if move.capture
-    puts ""
-  end
+def select_move(moves)
   puts "Select space to move to"
   input = gets.chomp
   moves[input.to_i]
 end
 
-
-
 #main
 
-b = Board.new
-b.init_pieces
-b.draw
+board = Board.new
+board.init_pieces
+board.draw
 game = true
 turn = :white
 moved = false
@@ -112,24 +28,24 @@ while game
 
   moved = false
   unless moved
-    mp = display_pieces(b, turn)
-    p = piece_to_move(mp)
-    am = available_moves(b, p, turn)
-    if am.empty?
+    moveable_pieces = board.list_pieces(turn)
+    piece = select_piece(moveable_pieces)
+    available_moves = board.available_moves(piece)
+    if available_moves.empty?
       puts "No legal moves available.  Hit enter to go back to piece selection"
       gets.chomp
       next
     end
-    move = display_and_get_move(b, am)
-    b.remove_piece_at move.to if move.capture
-    p.position = move.to
+    board.list_moves(available_moves)
+    move = select_move(available_moves)
+    board.remove_piece_at move.to if move.capture
+    piece.position = move.to
     move.piece.mark_move if move.piece.class == Pawn
-    puts move.piece.class
 
     moved = true
   end
 
-  b.draw
+  board.draw
   if turn == :white
     turn = :black
   else
