@@ -40,12 +40,25 @@ def open_path(d)
   return [dx, dy]
 
 end
-def get_move_type(board, x, y, color)
+def get_move_type(board, x, y, color, can_only_capture)
+
   dest_piece = board.get_piece_at(x: x, y: y)
+
   return :invalid unless board.in_bounds?(x, y)
-  return :open if dest_piece.nil?
-  return :capture if dest_piece.color != color
+
+
+
+  if board.get_piece_at(x: x, y: y).nil?
+    return :open if can_only_capture.nil?
+    return :open unless can_only_capture
+    return :invalid if can_only_capture
+  end
+
   return :invalid if dest_piece.color == color
+
+  if dest_piece.color != color
+    return can_only_capture ? :capture : :invalid
+  end
 
 
 end
@@ -55,16 +68,15 @@ def available_moves(board, piece, color)
   i = 1
   piece.moves.each do |move|
 
-    dx, dy = move.is_a?(Symbol) ? open_path(move) : move
+    dx, dy, can_capture = move.is_a?(Symbol) ? open_path(move) : move
 
     new_x = piece.position.x + dx
     new_y = piece.position.y + dy
-    move_type = get_move_type(board, new_x, new_y, color)
+    move_type = get_move_type(board, new_x, new_y, color, can_capture)
     while move_type != :invalid
       capture = move_type == :capture
       open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
       i += 1
-
       break if move.is_a?(Array)
       break if capture
       new_x += dx
@@ -111,8 +123,8 @@ while game
     move = display_and_get_move(b, am)
     b.remove_piece_at move.to if move.capture
     p.position = move.to
-    move.piece.remove_first_move if move.piece.class == Pawn
-
+    move.piece.mark_move if move.piece.class == Pawn
+    puts move.piece.class
 
     moved = true
   end

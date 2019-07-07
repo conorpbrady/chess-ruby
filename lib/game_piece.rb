@@ -25,6 +25,7 @@ class King < GamePiece
   def initialize(position, color)
     @symbol = color == :white ? "\u2654" : "\u265A"
     @moves = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]]
+
     super(position, color)
   end
 end
@@ -34,7 +35,7 @@ class Queen < GamePiece
 
     @symbol = color == :white ? "\u2655" : "\u265B"
     @moves = [:north, :south, :east, :west, :ne, :sw, :nw, :se]
-      super(position, color)
+    super(position, color)
   end
 end
 class Bishop < GamePiece
@@ -68,6 +69,7 @@ class Rook < GamePiece
     @symbol = color == :white ? "\u2656" : "\u265C"
 
     @moves = [:north, :south, :east, :west]
+
     super(position, color)
   end
 end
@@ -76,20 +78,24 @@ class Pawn < GamePiece
   def initialize(position, color)
     @symbol = color == :white ? "\u2659" : "\u265F"
     @color = color
-    @moved = false
+    @opening_move = false
     if @color == :black
-      @moves = [[0,1], [0,2]]
+      @moves = [[0,1,false], [0,2,false], [-1,1,true], [1,1,true]]
     else
-      @moves = [[0,-1], [0,-2]]
+      @moves = [[0,-1,false], [0,-2,false], [-1,-1,true], [1,-1,true]]
     end
 
     super(position, color)
   end
-  def remove_first_move
-    return if @moved
-    @moves.delete([0,2])
-    @moves.delete([0,-2])
-    @moved = true
+  def mark_move
+    return if @opening_move.nil?
+    if @opening_move
+      @opening_move = nil
+    else
+      @moves.delete([0,2,false])
+      @moves.delete([0,-2,false])
+      @opening_move = true
+    end
   end
 
   def check_capture
