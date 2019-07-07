@@ -1,12 +1,14 @@
 require './lib/position.rb'
 require './lib/board.rb'
 require './lib/game_piece.rb'
+require './lib/move.rb'
 
 def display_pieces(board, color)
-  pieces = color == :white ? board.white_pieces : board.black_pieces
   moveable_pieces = Hash.new
   i = 1
-  pieces.each do |piece|
+
+  board.active_pieces.each do |piece|
+    next unless piece.color == color
     print "#{i}. #{piece.class} @ #{piece.position}"
     moveable_pieces[i] = piece
     if i % 4 == 0
@@ -38,8 +40,16 @@ def open_path(d)
   return [dx, dy]
 
 end
+def get_move_type(board, x, y, color)
+  dest_piece = board.get_piece_at(x: x, y: y)
+  return :invalid unless board.in_bounds?(x, y)
+  return :open if dest_piece.nil?
+  return :capture if dest_piece.color != color
+  return :invalid if dest_piece.color == color
 
-def available_moves(board, piece)
+
+end
+def available_moves(board, piece, color)
   open_moves = Hash.new
 
   i = 1
@@ -49,20 +59,27 @@ def available_moves(board, piece)
 
     new_x = piece.position.x + dx
     new_y = piece.position.y + dy
-    while board.in_bounds?(new_x, new_y) && board.is_open_space?(x: new_x, y: new_y)
-      open_moves[i] = Position.new(new_x, new_y)
+    move_type = get_move_type(board, new_x, new_y, color)
+    while move_type != :invalid
+      capture = move_type == :capture
+      open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
       i += 1
+
       break if move.is_a?(Array)
+      break if capture
       new_x += dx
       new_y += dy
+      move_type = get_move_type(board, new_x, new_y, color)
     end
   end
   return open_moves
 end
 
-def display_and_get_move(moves)
+def display_and_get_move(board, moves)
   moves.each do |key, move|
-    puts "#{key}. #{move}"
+    print "#{key}. #{move}"
+    print " (capture #{board.get_piece_at(x: move.to.x, y: move.to.y)})" if move.capture
+    puts ""
   end
   puts "Select space to move to"
   input = gets.chomp
@@ -85,14 +102,18 @@ while game
   unless moved
     mp = display_pieces(b, turn)
     p = piece_to_move(mp)
-    am = available_moves(b, p)
+    am = available_moves(b, p, turn)
     if am.empty?
       puts "No legal moves available.  Hit enter to go back to piece selection"
       gets.chomp
       next
     end
-    new_position = display_and_get_move(am)
-    p.position = new_position
+    move = display_and_get_move(b, am)
+    b.remove_piece_at move.to if move.capture
+    p.position = move.to
+    move.piece.remove_first_move if move.piece.class == Pawn
+
+
     moved = true
   end
 
