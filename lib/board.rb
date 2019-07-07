@@ -1,5 +1,6 @@
 require './lib/position.rb'
 require './lib/game_piece.rb'
+require './lib/move.rb'
 
 class Board
   attr_accessor :board, :active_pieces
@@ -15,7 +16,7 @@ class Board
     (1..8).each do |n|
       print "#{n} |"
       (1..8).each do |m|
-        token = get_piece_at(x: m, y: n)
+        token = get_piece_at(m, n)
         token_symbol = token.nil? ?  " " : token.symbol
         print " " + token_symbol + " " + "|"
       end
@@ -24,11 +25,7 @@ class Board
     end
   end
 
-  def get_piece_at(p_str: nil, x: nil, y: nil)
-    if x.nil?
-      x = p_str[0].ord - 64
-      y = p_str[1].to_i
-    end
+  def get_piece_at(x, y)
     @active_pieces.each { |piece| return piece if piece.occupies?(x,y) }
     return nil
   end
@@ -55,7 +52,7 @@ class Board
   def list_moves(moves)
     moves.each do |key, move|
       print "#{key}. #{move}"
-      print " (capture #{get_piece_at(x: move.to.x, y: move.to.y)})" if move.capture
+      print " (capture #{get_piece_at(move.to.x, move.to.y)})" if move.capture
       puts ""
     end
   end
@@ -87,11 +84,11 @@ class Board
 
   def get_move_type(x, y, color, is_capture_only_move)
 
-    dest_piece = get_piece_at(x: x, y: y)
+    dest_piece = get_piece_at(x, y)
 
     return :invalid unless in_bounds?(x, y)
 
-    if get_piece_at(x: x, y: y).nil?
+    if get_piece_at(x, y).nil?
       return :open if is_capture_only_move.nil?
       return :open unless is_capture_only_move
       return :invalid if is_capture_only_move

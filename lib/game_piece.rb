@@ -86,7 +86,7 @@ class Rook < GamePiece
   end
 end
 class Pawn < GamePiece
-
+  
   def initialize(position, color)
     @symbol = color == :white ? "\u2659" : "\u265F"
     @color = color
