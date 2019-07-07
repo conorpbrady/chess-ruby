@@ -12,7 +12,25 @@ RSpec.describe Board do
     end
   end
 
+  describe "#check_test" do
+    it "returns true if king is in check" do
+      b = Board.new
+      p = Rook.new('A1',:white)
+      k = King.new('A6',:black)
+      b.active_pieces << p
+      b.active_pieces << k
+      expect(b.check_test(:black, king: k)).to be true
+    end
 
+    it "returns false if king is not in check" do
+      b = Board.new
+      p = Rook.new('B1',:white)
+      k = King.new('A6',:black)
+      b.active_pieces << p
+      b.active_pieces << k
+      expect(b.check_test(:black, king: k)).to be false
+    end
+  end
 
   describe "#available_moves" do
     it "returns two opening moves for pawn" do
@@ -20,19 +38,20 @@ RSpec.describe Board do
       p = Pawn.new('A7', :white)
       expect(b.available_moves(p).length).to eql(2)
     end
-    it "returns one opening move for pawn if blocked" do
+
+    it "returns one opening move for pawn if 2space blocked" do
       b = Board.new
       p = Pawn.new('A7', :white)
       b.active_pieces << p
       b.active_pieces << Pawn.new('A5', :white)
       expect(b.available_moves(p).length).to eql(1)
     end
-    it "returns no opening move for pawn if blocked" do
+
+    it "returns no opening move for pawn if 1space blocked" do
       b = Board.new
       p = Pawn.new('A7', :white)
       b.active_pieces << p
       b.active_pieces << Pawn.new('A6', :white)
-      b.available_moves(p).each { |k,v| p v.to_s }
       expect(b.available_moves(p).length).to eql(0)
     end
 
@@ -82,6 +101,15 @@ RSpec.describe Board do
       b = Board.new
       p = King.new('D4', :white)
       expect(b.available_moves(p).length).to eql(8)
+    end
+
+    it "Rook can capture piece more than 1 space away" do
+      b = Board.new
+      r = Rook.new('A1', :white)
+      k = Knight.new('B1', :white)
+      p = Pawn.new('A7',:black)
+      b.active_pieces << r << k << p
+      expect(b.available_moves(r).length).to eql(6)
     end
 
   end

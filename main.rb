@@ -28,6 +28,8 @@ while game
 
   moved = false
   unless moved
+
+    #check_test(turn)
     moveable_pieces = board.list_pieces(turn)
     piece = select_piece(moveable_pieces)
     available_moves = board.available_moves(piece)
@@ -41,6 +43,7 @@ while game
     board.remove_piece_at move.to if move.capture
     piece.position = move.to
     move.piece.mark_move if move.piece.class == Pawn
+
 
     moved = true
   end

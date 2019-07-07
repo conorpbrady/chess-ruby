@@ -86,15 +86,15 @@ class Rook < GamePiece
   end
 end
 class Pawn < GamePiece
-  
+
   def initialize(position, color)
     @symbol = color == :white ? "\u2659" : "\u265F"
     @color = color
     @opening_move = false
     if @color == :black
-      @moves = [[0,1,false], [0,2,false], [-1,1,true], [1,1,true]]
+      @moves = [[-1,1,true], [1,1,true], [0,1,false], [0,2,false]]
     else
-      @moves = [[0,-1,false], [0,-2,false], [-1,-1,true], [1,-1,true]]
+      @moves = [[-1,-1,true], [1,-1,true], [0,-1,false], [0,-2,false]]
     end
 
     super(position, color)

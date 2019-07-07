@@ -68,6 +68,7 @@ class Board
       new_x = piece.position.x + dx
       new_y = piece.position.y + dy
       move_type = get_move_type(new_x, new_y, color, can_capture)
+      break if move_type == :invalid && piece.class == Pawn && dx.zero?
       while move_type != :invalid
         capture = move_type == :capture
         open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
@@ -97,7 +98,7 @@ class Board
     return :invalid if dest_piece.color == color
 
     if dest_piece.color != color
-      return is_capture_only_move ? :capture : :invalid
+      return is_capture_only_move || is_capture_only_move.nil? ? :capture : :invalid
     end
   end
 
@@ -107,6 +108,20 @@ class Board
 
   def in_bounds?(x, y)
     return (x < 9 && x > 0 && y < 9 && y > 0)
+  end
+
+  def check_test(color, king: nil)
+    if king.nil?
+      king = @active_pieces.each { | piece| return piece if piece.class.equal?(King) && piece.color == color}
+    end
+    @active_pieces.each do |piece|
+      next if piece.color.equal?(color)
+      available_moves(piece).each do |key, move|
+        return true if king.occupies?(move.to.x, move.to.y)
+
+      end
+    end
+    return false
   end
 
   def init_pieces
