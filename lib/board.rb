@@ -57,7 +57,7 @@ class Board
     end
   end
 
-  def available_moves(piece)
+  def available_moves(piece, check_test_only: false)
     open_moves = Hash.new
     color = piece.color
     i = 1
@@ -67,14 +67,41 @@ class Board
 
       new_x = piece.position.x + dx
       new_y = piece.position.y + dy
+
       move_type = get_move_type(new_x, new_y, color, can_capture)
+
+      unless check_test_only #prevents infinite looping
+
+        #King cannot move into check
+        break if piece.class == King && check_test(color, x: new_x, y: new_y)
+
+        #Another piece cannot move to put king into check
+        #Saves original position, moves piece, then runs check condition
+        #Also simulates capture of opponent's piece
+
+        if move_type != :invalid
+          init_pos = piece.position
+          clone_piece = get_piece_at(new_x, new_y)
+
+          piece.position = Position.new(new_x, new_y)
+          @active_pieces.delete(clone_piece)if move_type == :capture
+
+          ct = check_test(color)
+
+          piece.position = init_pos
+          @active_pieces << clone_piece if move_type == :capture
+          break if ct
+        end
+      end
+
+
       break if move_type == :invalid && piece.class == Pawn && dx.zero?
       while move_type != :invalid
         capture = move_type == :capture
-        open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture)
+        open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture) unless (check_test_only && move_type != :check)
         i += 1
         break if move.is_a?(Array)
-        break if capture
+        break if capture || move_type == :check
         new_x += dx
         new_y += dy
         move_type = get_move_type(new_x, new_y, color, can_capture)
@@ -98,6 +125,7 @@ class Board
     return :invalid if dest_piece.color == color
 
     if dest_piece.color != color
+      return :check if dest_piece.class == King
       return is_capture_only_move || is_capture_only_move.nil? ? :capture : :invalid
     end
   end
@@ -110,15 +138,28 @@ class Board
     return (x < 9 && x > 0 && y < 9 && y > 0)
   end
 
-  def check_test(color, king: nil)
-    if king.nil?
-      king = @active_pieces.each { | piece| return piece if piece.class.equal?(King) && piece.color == color}
+  def get_king(color)
+      king = @active_pieces.each { |piece| return piece if piece.class.equal?(King) && piece.color == color }
+      @active_pieces.each do |piece|
+      end
+      raise Exception "No king found"
+  end
+
+  def check_test(color, x: nil, y: nil)
+
+    if x.nil?
+      k = get_king(color)
+      kx = k.position.x
+      ky = k.position.y
+    else
+      kx = x
+      ky = y
     end
+
     @active_pieces.each do |piece|
       next if piece.color.equal?(color)
-      available_moves(piece).each do |key, move|
-        return true if king.occupies?(move.to.x, move.to.y)
-
+      available_moves(piece, check_test_only: true).each do |key, move|
+        return true if kx == move.to.x && ky == move.to.y
       end
     end
     return false
