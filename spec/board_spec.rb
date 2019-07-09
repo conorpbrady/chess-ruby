@@ -53,8 +53,19 @@ RSpec.describe Board do
       r2 = Rook.new('A3', :black)
       b.active_pieces << wk << bk << r << r2
       expect(b.available_moves(r).length).to eql(1)
-
     end
+
+    it "piece can move to block check" do
+      b = Board.new
+      wk = King.new('A5', :white)
+      bk = King.new('F8', :black)
+      r = Rook.new('A1', :black)
+      r1 = Rook.new('B2', :white)
+      b.active_pieces << wk << bk << r << r1
+
+      expect(b.available_moves(r1).length).to eql(1)
+    end
+
     it "returns two opening moves for pawn" do
       b = Board.new
       wk = King.new('F8',:white)

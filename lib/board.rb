@@ -70,34 +70,31 @@ class Board
 
       move_type = get_move_type(new_x, new_y, color, can_capture)
 
-      unless check_test_only #prevents infinite looping
+      #King cannot move into check
+      break if piece.class == King && check_test(color, x: new_x, y: new_y) unless check_test_only
+      break if move_type == :invalid && piece.class == Pawn && dx.zero?
 
-        #King cannot move into check
-        break if piece.class == King && check_test(color, x: new_x, y: new_y)
+      while move_type != :invalid
+        unless check_test_only #prevents infinite looping
 
-        #Another piece cannot move to put king into check
-        #Saves original position, moves piece, then runs check condition
-        #Also simulates capture of opponent's piece
-
-        if move_type != :invalid
+          #Another piece cannot move to put king into check
+          #Saves original position, moves piece, then runs check condition
+          #Also simulates capture of opponent's piece
           init_pos = piece.position
           clone_piece = get_piece_at(new_x, new_y)
 
           piece.position = Position.new(new_x, new_y)
-          @active_pieces.delete(clone_piece)if move_type == :capture
+          @active_pieces.delete(clone_piece) if move_type == :capture
 
           ct = check_test(color)
-
+          "Check #{ct} with #{piece} @ #{piece.position}"
           piece.position = init_pos
           @active_pieces << clone_piece if move_type == :capture
           break if ct
         end
-      end
 
-
-      break if move_type == :invalid && piece.class == Pawn && dx.zero?
-      while move_type != :invalid
         capture = move_type == :capture
+        break if capture && check_test_only
         open_moves[i] = Move.new(piece, piece.position, Position.new(new_x, new_y), capture) unless (check_test_only && move_type != :check)
         i += 1
         break if move.is_a?(Array)
