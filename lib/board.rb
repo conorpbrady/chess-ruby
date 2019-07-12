@@ -142,6 +142,17 @@ class Board
       raise Exception "No king found"
   end
 
+  def mate_test(color)
+    return false if check_test(color)
+    all_moves = []
+    @active_pieces.each do |piece|
+      next if piece.color.equal?(color)
+      all_moves << available_moves(piece, check_test_only: true)
+
+
+
+  end
+
   def check_test(color, x: nil, y: nil)
 
     if x.nil?

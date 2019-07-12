@@ -4,6 +4,7 @@ require './lib/game_piece.rb'
 require './lib/move.rb'
 
 
+save_filename = './save.yaml'
 def select_piece(pieces)
   puts "Select pieces to move: "
   input = gets.chomp
@@ -15,6 +16,19 @@ def select_move(moves)
   input = gets.chomp
   moves[input.to_i]
 end
+
+def save_game()
+  yaml = YAML::dump(self)
+  save_file = File.open(save_filename, "r") { |file| file.write(yaml) }
+end
+
+def load_game()
+  File.open(save_filename, "w") do |file|
+    yaml = file.read()
+    YAML::load(yaml)
+  end
+end
+
 
 #main
 
