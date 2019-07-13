@@ -3,8 +3,19 @@ require './lib/board.rb'
 require './lib/game_piece.rb'
 require './lib/move.rb'
 
+
+# Remaining Items
+# Implement mate condition
+# Draw turn, check(mate) status, options to go back after piece selection
+# Implement save / load game methods
+# Pawn Promotion / En Passent
+# Clean up - make more modular
+
+
+
+
 class Game
-save_filename = './save.yaml'
+  @save_filename = './save.yaml'
   def select_piece(pieces)
     puts "Select pieces to move: "
     input = gets.chomp
