@@ -148,6 +148,7 @@ class Board
     @active_pieces.each do |piece|
       next if piece.color.equal?(color)
       all_moves << available_moves(piece, check_test_only: true)
+    end
 
 
 
